@@ -167,4 +167,15 @@ router.post(
   }
 );
 
+router.get("/:name/download", (req, res, next) => {
+  const source = createReadStream(
+    path.join(projectsImagePath, `${req.params.name}`)
+  );
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=${req.params.name}`
+  );
+  pipeline(source, res, (error) => next(error));
+});
+
 module.exports = router;
