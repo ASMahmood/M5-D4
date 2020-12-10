@@ -1,5 +1,6 @@
 const express = require("express");
 const projectRoutes = require("./projects");
+const { join } = require("path");
 
 const {
   notFoundHandler,
@@ -11,8 +12,11 @@ const {
 
 const server = express();
 const port = 6969;
+const publicFolderPath = join(__dirname, "../public");
 
 server.use(express.json());
+server.use(express.static(publicFolderPath));
+
 server.use("/projects", projectRoutes);
 
 server.use(notFoundHandler);
