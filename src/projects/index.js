@@ -6,8 +6,11 @@ const { readDB, writeDB } = require("../lib/utilities");
 const path = require("path");
 const uniqid = require("uniqid");
 const { check, validationResult } = require("express-validator");
+const reviewRoutes = require("../reviews");
+
 const router = express.Router();
 
+router.use("/:id/reviews", reviewRoutes);
 const upload = multer({});
 
 const projectsImagePath = path.join(__dirname, "../../public/img/projects");
