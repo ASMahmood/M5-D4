@@ -1,12 +1,16 @@
 const express = require("express");
-const uploadRoutes = require("../files/index");
+const { writeFile, createReadStream } = require("fs-extra");
+const multer = require("multer");
+const { pipeline } = require("stream");
 const { readDB, writeDB } = require("../lib/utilities");
 const path = require("path");
 const uniqid = require("uniqid");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
 
-router.use("/:id/uploadPhoto", uploadRoutes);
+const upload = multer({});
+
+const projectsImagePath = path.join(__dirname, "../../public/img/projects");
 const projectFilePath = path.join(__dirname, "projects.json"); //GETTING FILEPATH TO JSON
 
 router.get("/", async (req, res, next) => {
@@ -141,5 +145,26 @@ router.delete("/:id", async (req, res, next) => {
     next(err);
   }
 });
+
+router.post(
+  "/:id/uploadPhoto",
+  upload.single("projectImg"),
+  async (req, res, next) => {
+    let nameArray = req.file.originalname.split(".");
+    let fileType = "." + nameArray.pop();
+    console.log(nameArray);
+    console.log(fileType);
+    try {
+      await writeFile(
+        path.join(projectsImagePath, req.params.id + fileType),
+        req.file.buffer
+      );
+      res.send("ok");
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  }
+);
 
 module.exports = router;
