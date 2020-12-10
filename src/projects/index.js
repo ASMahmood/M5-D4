@@ -1,10 +1,12 @@
 const express = require("express");
+const uploadRoutes = require("../files/index");
 const { readDB, writeDB } = require("../lib/utilities");
 const path = require("path");
 const uniqid = require("uniqid");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
 
+router.use("/:id/uploadPhoto", uploadRoutes);
 const projectFilePath = path.join(__dirname, "projects.json"); //GETTING FILEPATH TO JSON
 
 router.get("/", async (req, res, next) => {

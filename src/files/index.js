@@ -10,23 +10,19 @@ const upload = multer({});
 
 const projectsImagePath = join(__dirname, "../../public/img/projects");
 
-router.post(
-  "/uploadPhoto",
-  upload.single("projectImg"),
-  async (req, res, next) => {
-    console.log(req.params.id);
-    console.log(req.file.originalname);
-    try {
-      await writeFile(
-        join(projectsImagePath, req.file.originalname),
-        req.file.buffer
-      );
-      res.send("ok");
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
+router.post("/", upload.single("projectImg"), async (req, res, next) => {
+  console.log(req.params.id);
+  console.log(req.file.originalname);
+  try {
+    await writeFile(
+      join(projectsImagePath, req.file.originalname),
+      req.file.buffer
+    );
+    res.send("ok");
+  } catch (error) {
+    console.log(error);
+    next(error);
   }
-);
+});
 
 module.exports = router;
